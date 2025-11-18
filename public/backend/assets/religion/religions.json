@@ -1,0 +1,312 @@
+[
+  {
+    "religionId": 1,
+    "religion": "Roman Catholic",
+    "shortName": "Roman Catholic"
+  },
+  {
+    "religionId": 2,
+    "religion": "Iglesia ni Cristo",
+    "shortName": "Iglesia ni Cristo"
+  },
+  {
+    "religionId": 3,
+    "religion": "Islam",
+    "shortName": "Islam"
+  },
+  {
+    "religionId": 4,
+    "religion": "Protestant",
+    "shortName": "Protestant"
+  },
+  {
+    "religionId": 5,
+    "religion": "Buddhism",
+    "shortName": "Buddhism"
+  },
+  {
+    "religionId": 6,
+    "religion": "Jehova's Witness",
+    "shortName": "Jehova's Witness"
+  },
+  {
+    "religionId": 7,
+    "religion": "Methodist",
+    "shortName": "Methodist"
+  },
+  {
+    "religionId": 8,
+    "religion": "Adventist",
+    "shortName": "Adventist"
+  },
+  {
+    "religionId": 9,
+    "religion": "Baptist",
+    "shortName": "Baptist"
+  },
+  {
+    "religionId": 10,
+    "religion": "Born Again",
+    "shortName": "Born Again"
+  },
+  {
+    "religionId": 11,
+    "religion": "Jewish",
+    "shortName": "Jewish"
+  },
+  {
+    "religionId": 12,
+    "religion": "Mormon",
+    "shortName": "Mormon"
+  },
+  {
+    "religionId": 13,
+    "religion": "Aglipayan",
+    "shortName": "Aglipayan"
+  },
+  {
+    "religionId": 14,
+    "religion": "Anglican",
+    "shortName": "Anglican"
+  },
+  {
+    "religionId": 15,
+    "religion": "Pentecostal",
+    "shortName": "Pentecostal"
+  },
+  {
+    "religionId": 16,
+    "religion": "Secular",
+    "shortName": "Secular"
+  },
+  {
+    "religionId": 17,
+    "religion": "LD-Saint",
+    "shortName": "LD-Saint"
+  },
+  {
+    "religionId": 18,
+    "religion": "Christian",
+    "shortName": "Christian"
+  },
+  {
+    "religionId": 19,
+    "religion": "Lutheran",
+    "shortName": "Lutheran"
+  },
+  {
+    "religionId": 20,
+    "religion": "WCB",
+    "shortName": "WCB"
+  },
+  {
+    "religionId": 21,
+    "religion": "Other Christian Denomination",
+    "shortName": "Other Christian Denomination"
+  },
+  {
+    "religionId": 22,
+    "religion": "Scientology",
+    "shortName": "Scientology"
+  },
+  {
+    "religionId": 23,
+    "religion": "Hinduism",
+    "shortName": "Hinduism"
+  },
+  {
+    "religionId": 24,
+    "religion": "Sikhism",
+    "shortName": "Sikhism"
+  },
+  {
+    "religionId": 25,
+    "religion": "Judaism",
+    "shortName": "Judaism"
+  },
+  {
+    "religionId": 26,
+    "religion": "Baha’i Faith",
+    "shortName": "Baha’i Faith"
+  },
+  {
+    "religionId": 27,
+    "religion": "Confucianism",
+    "shortName": "Confucianism"
+  },
+  {
+    "religionId": 28,
+    "religion": "Jainism",
+    "shortName": "Jainism"
+  },
+  {
+    "religionId": 29,
+    "religion": "Shinto",
+    "shortName": "Shinto"
+  },
+  {
+    "religionId": 30,
+    "religion": "Alliance",
+    "shortName": "Alliance"
+  },
+  {
+    "religionId": 31,
+    "religion": "Lakas Angkan Ministry",
+    "shortName": "LAMI"
+  },
+  {
+    "religionId": 32,
+    "religion": "Wesleyan",
+    "shortName": "Wesleyan"
+  },
+  {
+    "religionId": 33,
+    "religion": "Assemblies of God",
+    "shortName": "Assemblies of God"
+  },
+  {
+    "religionId": 34,
+    "religion": "UCCP",
+    "shortName": "UCCP"
+  },
+  {
+    "religionId": 35,
+    "religion": "Church of God",
+    "shortName": "Church of God"
+  },
+  {
+    "religionId": 36,
+    "religion": "Church of Christ",
+    "shortName": "Church of Christ"
+  },
+  {
+    "religionId": 37,
+    "religion": "Evangelical",
+    "shortName": "Evangelical"
+  },
+  {
+    "religionId": 38,
+    "religion": "Four Square",
+    "shortName": "Four Square"
+  },
+  {
+    "religionId": 39,
+    "religion": "Langkat",
+    "shortName": "Langkat"
+  },
+  {
+    "religionId": 40,
+    "religion": "Apostolic",
+    "shortName": "Apostolic"
+  },
+  {
+    "religionId": 41,
+    "religion": "Good News",
+    "shortName": "Good News"
+  },
+  {
+    "religionId": 42,
+    "religion": "Seventh Day Adventist",
+    "shortName": "SDA"
+  },
+  {
+    "religionId": 43,
+    "religion": "Kingdom of Jesus Christ",
+    "shortName": "Kingdom of Jesus Christ"
+  },
+  {
+    "religionId": 44,
+    "religion": "Temple of God",
+    "shortName": "Temple of God"
+  },
+  {
+    "religionId": 45,
+    "religion": "Agnostic",
+    "shortName": "Agnostic"
+  },
+  {
+    "religionId": 46,
+    "religion": "Full Gospel",
+    "shortName": "Full Gospel"
+  },
+  {
+    "religionId": 47,
+    "religion": "Espiritista",
+    "shortName": "Espiritista"
+  },
+  {
+    "religionId": 48,
+    "religion": "Episcopalian",
+    "shortName": ""
+  },
+  {
+    "religionId": 49,
+    "religion": "Holiness Church of God",
+    "shortName": ""
+  },
+  {
+    "religionId": 50,
+    "religion": "Southern Baptist",
+    "shortName": ""
+  },
+  {
+    "religionId": 51,
+    "religion": "Anchor Bay",
+    "shortName": "Anchor Bay"
+  },
+  {
+    "religionId": 52,
+    "religion": "Iglesia Filipina Independente",
+    "shortName": "IFI"
+  },
+  {
+    "religionId": 53,
+    "religion": "Muncado",
+    "shortName": "Muncado"
+  },
+  {
+    "religionId": 54,
+    "religion": "ECOFI",
+    "shortName": ""
+  },
+  {
+    "religionId": 55,
+    "religion": "United Methodist",
+    "shortName": ""
+  },
+  {
+    "religionId": 56,
+    "religion": "CAMACOP",
+    "shortName": ""
+  },
+  {
+    "religionId": 57,
+    "religion": "One Way Outreach",
+    "shortName": ""
+  },
+  {
+    "religionId": 58,
+    "religion": "Christianity",
+    "shortName": "Christianity"
+  },
+  {
+    "religionId": 59,
+    "religion": "Christian Ministry",
+    "shortName": "Christian Ministry"
+  },
+  {
+    "religionId": 60,
+    "religion": "MCGI",
+    "shortName": ""
+  },
+  {
+    "religionId": 61,
+    "religion": "Bahai' Faith",
+    "shortName": ""
+  },
+  {
+    "religionId": 62,
+    "religion": "Moncadista",
+    "shortName": "FCWA"
+  }
+]
