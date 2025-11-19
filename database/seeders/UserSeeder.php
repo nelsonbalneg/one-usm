@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        DB::table('portal_users')->insert([
             [
                 'student_id' => '11-111111',
                 'email' => 'admin@gmail.com',
