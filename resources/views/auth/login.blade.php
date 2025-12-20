@@ -10,7 +10,7 @@
     <meta content="Minimal Admin & Dashboard Template" name="description">
     <meta content="Themesdesign" name="author">
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('backend/assets/images/logo/fav.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('backend/assets/images/logo/hiraya.png') }}">
     <!-- Layout config Js -->
     <script src="{{ asset('backend/assets/js/layout.js') }}"></script>
     <!-- Icons CSS -->
@@ -112,106 +112,40 @@
                         class="block mx-auto h-15 dark:hidden">
                 </a>
 
-                <div class="mt-2 text-center">
-                    <h4 class="mb-1 text-yellow-500 dark:text-yellow-500">Welcome Guest!</h4>
+                <div class="mt-2 mb-8 text-center">
                     <p class="text-slate-500 dark:text-zink-200">Sign in to continue to One USM</p>
                 </div>
-                {{-- <div class="flex gap-3 p-3 mt-5 text-sm text-yellow-500 rounded-md bg-yellow-50 dark:bg-yellow-400/20">
-                    <div>
-                        <h6 class="mb-1">WARNING!</h6>
-                        <ul class="ml-2 list-disc list-inside">
-                            <li>Creating multiple accounts to secure slots is <b>PROHIBITED</b></li>
-                            <li>Ensure all information is complete and accurate.</li>
-                            <li>Incomplete or incorrect entries, or multiple accounts, may result in disqualification.
-                            </li>
+
+                @if ($errors->any())
+                    <div class="mt-2 mb-5 text-sm text-red-500 text-center">
+                        <ul class="list-none">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
                         </ul>
                     </div>
-                </div> --}}
-                <form method="POST" action="{{ route('login') }}" class="mt-5">
-                    @csrf
-                    <div class="mb-3 text-center">
-                        @if ($errors->any())
-                            <div class="mt-2 text-sm text-red-500">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="inline-block mb-2 text-base font-medium">Email Address</label>
-                        <input type="text" id="email" name="email" value="{{ old('email') }}"
-                            class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                            placeholder="Enter email address">
-                        <div id="email-error" class="hidden mt-1 text-sm text-red-500">Please enter a valid email
-                            address.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="inline-block mb-2 text-base font-medium">Password</label>
-                        <input type="password" id="password" name="password" required
-                            autocomplete="current-password"
-                            class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                            placeholder="Enter password">
-                        <div id="password-error" class="hidden mt-1 text-sm text-red-500">Password must be at least 8
-                            characters long and contain both letters and numbers.</div>
-                    </div>
+                @endif
+                <div class="mb-3">
+                    <select id="campus" name="campus" required
+                        class="form-select border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200">
+                        <option value="" selected disabled>Select Campus</option>
+                        <option value="1" {{ old('campus') == '1' ? 'selected' : '' }}>Main Campus</option>
+                        <option value="1" {{ old('campus') == '1' ? 'selected' : '' }}>PPALMA Campus</option>
+                        <option value="3" {{ old('campus') == '3' ? 'selected' : '' }}>M'lang Campus</option>
+                        <option value="3" {{ old('campus') == '3' ? 'selected' : '' }}>Arakan Campus</option>
+                        <option value="3" {{ old('campus') == '3' ? 'selected' : '' }}>KCC Campus</option>
+                    </select>
 
-                    <div class="flex items-center justify-between mt-4">
-                        <!-- Remember Me Checkbox -->
-                        <div class="flex items-center gap-2">
-                            <input id="checkboxDefault1" name="remember"
-                                class="border rounded-sm appearance-none size-4 bg-slate-100 border-slate-200 dark:bg-zink-600 dark:border-zink-500 checked:bg-custom-500 checked:border-custom-500 dark:checked:bg-custom-500 dark:checked:border-custom-500 checked:disabled:bg-custom-400 checked:disabled:border-custom-400"
-                                type="checkbox" value="1">
-                            <label for="checkboxDefault1"
-                                class="inline-block text-base font-medium align-middle cursor-pointer">
-                                Remember me
-                            </label>
-                        </div>
-
-                        <!-- Forgot Password Link -->
-                        <div>
-                            <a href="{{ route('student.forgot-password') }}"
-                                class="text-base font-medium text-blue-600 cursor-pointer hover:underline">
-                                Forgot Password?
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="mt-5 cf-turnstile" data-sitekey="{{ config('services.turnstile.sitekey') }}"></div>
-
-                    <div class="mt-5 text-center">
-                        <button type="submit"
-                            class="w-full text-white bg-green-500 border-green-500 btn hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-green-600 focus:border-green-600 focus:ring focus:ring-green-100 active:text-white active:bg-green-600 active:border-green-600 active:ring active:ring-green-100 dark:ring-green-400/10">Sign
-                            In</button>
-                    </div>
-
-                </form>
-
-                <div class="mt-10 text-center">
-                    <p class="mb-0 text-slate-500 dark:text-zink-200">Don't have an account ? <a
-                            href="{{ route('register') }}"
-                            class="font-semibold underline transition-all duration-150 ease-linear text-slate-500 dark:text-zink-200 hover:text-custom-500 dark:hover:text-custom-500">
-                            Sign Up</a> </p>
                 </div>
-
-                {{-- @if ($endofregistration && Carbon::parse($endofregistration, 'Asia/Manila')->isFuture())
-                    <div class="mt-10 text-center">
-                        <p class="mb-0 text-slate-500 dark:text-zink-200">Don't have an account ? <a
-                                href="{{ route('register') }}"
-                                class="font-semibold underline transition-all duration-150 ease-linear text-slate-500 dark:text-zink-200 hover:text-custom-500 dark:hover:text-custom-500">
-                                Sign Up</a> </p>
-                    </div>
-                @else
-                    <div class="mt-4 card">
-                        <div class="flex gap-3 p-4 text-sm text-red-500 rounded-md bg-red-50 dark:bg-red-400/20">
-                            <i data-lucide="alert-circle" class="inline-block size-4 mt-0.5 shrink-0"></i>
-                            <p class="mb-0">Please be informed that USMCEE <b>account registration and slot
-                                    reservation</b> are now closed.</p>
-                        </div>
-                    </div>
-                @endif --}}
+                <form id="google-login-form" method="GET" action="{{ route('google.login') }}">
+                    <input type="hidden" name="campus" id="google-campus" value="">
+                    <button type="submit"
+                        class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 hover:bg-gray-50">
+                        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google"
+                            class="w-5 h-5">
+                        <span>Continue with Google</span>
+                    </button>
+                </form>
 
             </div>
         </div>
@@ -220,28 +154,19 @@
     <script src="{{ asset('backend/assets/js/tailwick.bundle.js') }}"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    {{-- <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script> --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const emailInput = document.getElementById("email");
+        // Copy selected campus to the hidden input before submitting
+        const campusSelect = document.getElementById('campus');
+        const googleCampusInput = document.getElementById('google-campus');
+        const googleForm = document.getElementById('google-login-form');
 
-            emailInput.addEventListener("blur", function() {
-                const email = emailInput.value.trim(); // Trim whitespace
-                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-                // Only validate if email is not empty
-                if (email && !emailPattern.test(email)) {
-                    emailInput.value = ""; // Clear invalid email input
-                    Toastify({
-                        text: 'Please enter a valid email address.',
-                        duration: 5000,
-                        gravity: "top",
-                        position: "right",
-                        backgroundColor: "#f56565", // Red color for error
-                        className: "error",
-                    }).showToast();
-                }
-            });
+        googleForm.addEventListener('submit', function(e) {
+            if (!campusSelect.value) {
+                e.preventDefault();
+                alert('Please select a campus before logging in.');
+            } else {
+                googleCampusInput.value = campusSelect.value;
+            }
         });
     </script>
 </body>

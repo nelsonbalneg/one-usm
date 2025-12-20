@@ -1,20 +1,20 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\DetectWebView;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\ReservationDetailsController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Student\StudentCeeReserveController;
 
 
 
 Route::middleware(['guest', DetectWebView::class, 'check.maintenance'])->group(function () {
     Route::get('/', [AuthenticatedSessionController::class, 'create']);
 });
+
+Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'callback']);
 
 
 Route::middleware(['auth', 'verified', 'check.maintenance'])->group(function () {

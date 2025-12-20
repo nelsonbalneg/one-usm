@@ -1,6 +1,6 @@
 @extends('student.layouts.master')
 @section('title')
-    USM Hiraya - Dashboard
+    One USM - Dashboard
 @endsection
 
 @push('styles')
@@ -29,22 +29,48 @@
 
         <div class="xl:col-span-12">
             <!--start card-->
+<div class="card mt-4">
+    <div class="card-body">
+        <h6 class="text-green-500 uppercase text-15 mb-3">Student Accountabilities</h6>
 
-            <div class="card">
-                <div class="card-body">
+        @if(count($accountabilities) > 0)
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead class="text-left bg-slate-100 dark:bg-zinc-700">
+                        <tr>
+                            <th class="px-3 py-2 border font-semibold">Reason</th>
+                            <th class="px-3 py-2 border font-semibold">Entered By</th>
+                            <th class="px-3 py-2 border font-semibold">Date Entered</th>
+                            <th class="px-3 py-2 border font-semibold">Last Updated</th>
+                            <th class="px-3 py-2 border font-semibold">Cleared</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($accountabilities as $acc)
+                            <tr class="hover:bg-slate-50 dark:hover:bg-zinc-800">
+                                <td class="px-3 py-2 border">{{ $acc['reason'] }}</td>
+                                <td class="px-3 py-2 border">{{ $acc['enteredBy'] }}</td>
+                                <td class="px-3 py-2 border">{{ date('M d, Y h:i A', strtotime($acc['dateEntered'])) }}</td>
+                                <td class="px-3 py-2 border">{{ date('M d, Y h:i A', strtotime($acc['dateUpdate'])) }}</td>
+                                <td class="px-3 py-2 border">
+                                    @if($acc['cleared'])
+                                        <span class="text-green-600 font-semibold">Yes</span>
+                                    @else
+                                        <span class="text-red-600 font-semibold">No</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
+            <p class="text-slate-500 dark:text-zinc-200">No accountabilities found.</p>
+        @endif
+    </div>
+</div>
 
-                    <h6 class="text-green-500 uppercase text-15">Announcements</h6>
-                    <p class="mb-4 text-slate-500 dark:text-zink-200">All recent announcements will be displayed here.
-                    </p>
 
-
-                    <!--end form-->
-                </div>
-
-
-
-
-            </div><!--end card-->
         </div><!--end col-->
         <!--end col-->
 

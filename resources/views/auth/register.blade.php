@@ -5,12 +5,12 @@
 <head>
 
     <meta charset="utf-8">
-    <title>USM HIRAYA | Register</title>
+    <title>One USM | Register </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta content="Minimal Admin & Dashboard Template" name="description">
     <meta content="Themesdesign" name="author">
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('backend/assets/images/logo/fav.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('backend/assets/images/logo/hiraya.png') }}">
     <!-- Layout config Js -->
     <script src="{{ asset('backend/assets/js/layout.js') }}"></script>
     <!-- Icons CSS -->
@@ -101,178 +101,90 @@
                 <div class="mt-8 text-center">
                     <h4 class="mb-1 text-info-500 dark:text-green-500">Create your account</h4>
                 </div>
-                <form method="POST" class="mt-5" action="{{ route('register') }}">
+                {{-- Email errors --}}
+                @if ($errors->has('email'))
+                    <ul class="text-red-500 text-sm mt-1 list-disc list-inside">
+                        @foreach ($errors->get('email') as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+
+                {{-- Password errors --}}
+                @if ($errors->has('password'))
+                    <ul class="text-red-500 text-sm mt-1 list-disc list-inside">
+                        @foreach ($errors->get('password') as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+
+                <form method="POST" action="{{ route('register') }}">
                     @csrf
-                    <div class="mb-3 text-left">
-                        @if ($errors->any())
-                            <div class="mt-2 text-sm text-red-500">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                    </div>
-                    <div class="flex flex-col gap-4 mb-3 md:flex-row">
-                        <div class="flex-1">
-                            <label for="firstname" class="inline-block mb-2 text-base font-medium">First Name <sup
-                                    class="text-red-500">* required</sup></label>
-                            <input type="text"
-                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                name="firstname" value="{{ old('firstname') }}" placeholder="Enter First Name">
-                        </div>
-
-                        <div class="flex-1">
-                            <label for="middlename" class="inline-block mb-2 text-base font-medium">Middle Name<sup
-                                    class="text-blue-500">* optional</sup></label>
-                            <input type="text"
-                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                name="middlename" value="{{ old('middlename') }}" placeholder="Enter Middle Name">
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-4 mb-3 md:flex-row">
-
-                        <div class="flex-1">
-                            <label for="lastname" class="inline-block mb-2 text-base font-medium">Last Name<sup
-                                    class="text-red-500">* required</sup></label>
-                            <input type="text"
-                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                name="lastname" value="{{ old('lastname') }}" placeholder="Enter Last Name">
-                        </div>
-
-                        <div class="flex-1">
-                            <label for="suffix" class="inline-block mb-2 text-base font-medium">Suffix
-                                (ext.) <sup class="text-blue-500">* optional</sup></label>
-                            <select class="form-input border-slate-300 focus:outline-none focus:border-custom-500"
-                                id="suffix" data-choices name="suffix">
-                                <option value="">-Select-</option>
-                                <option value="Jr">Jr</option>
-                                <option value="Sr">Sr</option>
-                                <option value="I">I</option>
-                                <option value="II">II</option>
-                                <option value="III">III</option>
-                                <option value="IV">IV</option>
-                                <option value="V">V</option>
-                                <option value="VI">VI</option>
-                                <option value="VII">VII</option>
-                                <option value="VIII">VII</option>
-                            </select>
-                        </div><!--end col-->
-                    </div>
-
-                    <div class="flex flex-col gap-4 mb-3 md:flex-row">
-
-                        <div class="xl:col-span-3">
-                            <label for="birthdate" class="inline-block mb-2 text-base font-medium">Birthdate<sup
-                                    class="text-red-500">* required</sup></label>
-                            <input type="date" id="birthdate" name="birthdate"
-                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                placeholder="Select date" data-provider="flatpickr" data-date-format="M d, Y"
-                                value="{{ old('birthdate') }}">
-                        </div><!--end col-->
-
-                        <div class="flex-1">
-                            <label for="sex" class="inline-block mb-2 text-base font-medium">Sex <sup
-                                    class="text-red-500">* required</sup></label>
-                            <select class="form-input border-slate-300 focus:outline-none focus:border-custom-500"
-                                id="sex" data-choices name="sex">
-                                <option value="">-Select-</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div><!--end col-->
-                    </div>
 
                     <div class="mb-3">
                         <label for="email" class="inline-block mb-2 text-base font-medium">Email <sup
-                                class="text-red-500">* required</sup></label>
-                        <input type="text" id="email" name="email"
-                            class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                            placeholder="Enter email">
-
-                        <div id="email-error" class="hidden mt-1 text-sm text-red-500">Please enter a valid email
-                            address.</div>
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
+                                class="text-red-500">*</sup></label>
+                        <input type="email" name="email" id="email" required
+                            class="form-input border-slate-200 focus:outline-none focus:border-custom-500"
+                            placeholder="Enter email" value="{{ old('email') }}">
                     </div>
+
                     <div class="flex gap-4 mb-3 flex-col-2 md:flex-row">
-                        <span class="text-base font-small text-sky-600">* Please use a valid and active email. This
-                            email will be essential for password resets and other important updates.</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-4 mb-5 lg:grid-cols-2 xl:grid-cols-12">
-                        <div class="xl:col-span-12 sm:col-span-12">
-                            <label for="cleavePhone" class="inline-block mb-2 text-base font-medium">Phone <sup
-                                    class="text-red-500">* required</sup></label>
-                            <input type="text" id="cleavePhone" name="phone"
-                                class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                                placeholder="xxxx-xxx-xxxx">
-                            @error('phone')
-                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="flex gap-4 mb-3 flex-col-2 md:flex-row">
-                        <span class="text-base font-small text-sky-600">* Please use a valid and active cellphone
-                            number. This number is essential for receiving SMS notifications, including entrance exam
-                            information and other important updates.</span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="inline-block mb-2 text-base font-medium">Password <sup
-                                class="text-red-500">* required</sup></label>
-                        <input type="password" name="password" id="password" required autocomplete="new-password"
-                            class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                            placeholder="Enter password">
-                        <x-input-error :messages="$errors->get('password')" class="mt-1 text-sm text-red-500" />
+                        <span class="text-base font-small text-sky-600"> <strong>Only USM institutional email addresses
+                                are allowed.</strong><br>
+                            * Personal or non-USM email accounts are not permitted for creating a student portal
+                            account.<br>
+                            * This ensures secure access to password resets and official university
+                            communications.</span>
                     </div>
 
+                    <!-- Password Field -->
                     <div class="mb-3">
-                        <label for="password_confirmation" class="inline-block mb-2 text-base font-medium">Confirm
-                            Password <sup class="text-red-500">* required</sup></label>
-                        <input type="password" name="password_confirmation" id="password_confirmation" required
-                            autocomplete="new-password"
-                            class="form-input border-slate-200 dark:border-zink-500 focus:outline-none focus:border-custom-500 disabled:bg-slate-100 dark:disabled:bg-zink-600 disabled:border-slate-300 dark:disabled:border-zink-500 dark:disabled:text-zink-200 disabled:text-slate-500 dark:text-zink-100 dark:bg-zink-700 dark:focus:border-custom-800 placeholder:text-slate-400 dark:placeholder:text-zink-200"
-                            placeholder="Confirm password">
-                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1 text-sm text-red-500" />
-                    </div>
-
-                    <div class="flex items-start mt-5 space-x-2">
-                        <input type="checkbox" id="defaultCheck1"
-                            class="w-4 h-4 text-green-600 border-gray-300 rounded form-checkbox focus:ring focus:ring-green-500 focus:ring-opacity-50">
-                        <label for="defaultCheck1" class="text-sm font-normal text-gray-500">By creating an account,
-                            you agree to our
-                            <a href="#" class="text-green-600 underline" data-drawer-target="drawerterms">Terms
-                                &
-                                Conditions</a>
+                        <label for="password" class="inline-block mb-2 text-base font-medium">
+                            Password <sup class="text-red-500">*</sup>
                         </label>
+                        <input type="password" name="password" id="password" required
+                            class="form-input border-slate-200 focus:outline-none focus:border-custom-500"
+                            placeholder="Enter password">
+
                     </div>
 
-                    {{-- <div class="mt-5 cf-turnstile" data-sitekey="{{ env('TURNSTILE_SITE_KEY') }}"></div> --}}
-                    <div class="mt-5 cf-turnstile" data-sitekey="{{ config('services.turnstile.sitekey') }}"></div>
+                    <!-- Confirm Password Field -->
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="inline-block mb-2 text-base font-medium">
+                            Confirm Password <sup class="text-red-500">*</sup>
+                        </label>
+                        <input type="password" name="password_confirmation" id="password_confirmation" required
+                            class="form-input border-slate-200 focus:outline-none focus:border-custom-500"
+                            placeholder="Confirm password">
+                    </div>
+
+
+
+
+                    <div class="mb-3">
+                        <label for="campus_id" class="inline-block mb-2 text-base font-medium">Campus <sup
+                                class="text-red-500">*</sup></label>
+                        <select name="campus_id" id="campus_id" required
+                            class="form-input border-slate-200 focus:outline-none focus:border-custom-500">
+                            <option value="">-Select Campus-</option>
+                            <option value="1">Main Campus - Undegraduate</option>
+                            <option value="4">Main Campus - Graduate School</option>
+                            <option value="4">Main Campus - Medicine</option>
+                            <option value="3">KCC Campus</option>
+                        </select>
+                    </div>
+
+                     <div class="mt-5 cf-turnstile" data-sitekey="{{ config('services.turnstile.sitekey') }}"></div>
 
                     <div class="mt-5 text-center">
-                        <button type="submit" id="submitButton" disabled
-                            class="w-full text-white bg-green-500 border-green-500 btn hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-green-600 focus:border-green-600 focus:ring focus:ring-green-100 active:text-white active:bg-green-600 active:border-green-600 active:ring active:ring-green-100 dark:ring-green-400/10">
-                            Create Account</button>
+                        <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">
+                            Create Account
+                        </button>
                     </div>
-                    {{-- @if ($endofregistration && Carbon::parse($endofregistration, 'Asia/Manila')->isFuture())
-                        <div class="mt-5 text-center">
-                            <button type="submit" id="submitButton" disabled
-                                class="w-full text-white bg-green-500 border-green-500 btn hover:text-white hover:bg-custom-600 hover:border-custom-600 focus:text-white focus:bg-green-600 focus:border-green-600 focus:ring focus:ring-green-100 active:text-white active:bg-green-600 active:border-green-600 active:ring active:ring-green-100 dark:ring-green-400/10">
-                                Create Account</button>
-                        </div>
-                    @else
-                        <div class="mt-4 card">
-                            <div class="flex gap-3 p-4 text-sm text-red-500 rounded-md bg-red-50 dark:bg-red-400/20">
-                                <i data-lucide="alert-circle" class="inline-block size-4 mt-0.5 shrink-0"></i>
-                                <p class="mb-0">Please be informed that USMCEE <b>account registration and slot
-                                        reservation</b> are now closed.</p>
-                            </div>
-                        </div>
-                    @endif --}}
                 </form>
+
 
                 <div class="mt-8 text-center">
                     <p class="mb-0 text-slate-500 dark:text-zink-200">Already have an account ? <a

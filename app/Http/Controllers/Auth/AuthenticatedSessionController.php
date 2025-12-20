@@ -31,22 +31,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-
-        // Validate that the Turnstile response is present
+        // 1. Validate email format first
         $request->validate([
+            'email' => 'required|email',  // <--- email format validation
+            'password' => 'required',
             'cf-turnstile-response' => 'required',
         ], [
+            'email.email' => 'Please enter a valid email address.',
             'cf-turnstile-response.required' => 'Turnstile verification is required.',
         ]);
 
-        // Retrieve the Turnstile response from the request
+        // 2. Turnstile verification
         $turnstileResponse = $request->input('cf-turnstile-response');
-        // $secretKey = env('TURNSTILE_SECRET_KEY'); // Your Turnstile secret key
         $secretKey = config('services.turnstile.secret');
 
-        // Send the Turnstile response for verification
         $verifyResponse = Http::asForm()
-            ->timeout(seconds: 60) // Set timeout to 20 seconds
+            ->timeout(60)
             ->post("https://challenges.cloudflare.com/turnstile/v0/siteverify", [
                 'secret' => $secretKey,
                 'response' => $turnstileResponse,
@@ -54,17 +54,22 @@ class AuthenticatedSessionController extends Controller
             ]);
 
         $result = $verifyResponse->json();
-        // Log::info('Turnstile secret key used', ['key' => env('TURNSTILE_SECRET_KEY')]);
+        Log::info('Turnstile response', (array) $result);
 
-        // Log the Turnstile response for debugging
-        Log::info('Turnstile response from Cloudflare', (array) $result);
-
-        // Check if Turnstile verification was successful
         if (!$result['success']) {
-            return redirect()->back()->withErrors(['turnstile' => 'Turnstile verification failed. Please try again.']);
+            return back()->withErrors([
+                'turnstile' => 'Turnstile verification failed. Please try again.',
+            ]);
         }
 
-        // Proceed with the usual login logic
+        // 3. Check if email exists in database
+        if (!\App\Models\User::where('email', $request->email)->exists()) {
+            return back()->withErrors([
+                'email' => 'Invalid login credentials.',
+            ])->withInput();
+        }
+
+        // 4. Attempt login
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
 
@@ -72,7 +77,6 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
             $role = $request->user()->role;
 
-            // Redirect based on user role
             return match ($role) {
                 'student' => redirect()->route('student.dashboard'),
                 'admin' => redirect()->route('admin.dashboard'),
@@ -83,22 +87,25 @@ class AuthenticatedSessionController extends Controller
             };
         }
 
-        // If login fails, redirect back with an error message
-        return redirect()->back()->withErrors(['email' => 'Login failed. Please check your credentials.']);
+        // 5. Email exists but password is incorrect
+        return back()->withErrors([
+            'password' => 'Incorrect password. Please try again.',
+        ])->withInput();
     }
+
 
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+public function destroy(Request $request)
+{
+    Auth::logout();
 
-        $request->session()->invalidate();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        $request->session()->regenerateToken();
+    return redirect()->route('login'); // go to login page after logout
+}
 
-        return redirect('/');
-    }
 }

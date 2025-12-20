@@ -2,110 +2,206 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\User;
-use Illuminate\View\View;
-use App\Models\CeeSession;
-use App\Models\SiteSetting;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Services\SarService;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
-    public function create(): View
+    protected SarService $sarService;
+
+    public function __construct(SarService $sarService)
     {
-
-
+        $this->sarService = $sarService;
+    }
+    /**
+     * Display registration page.
+     */
+    public function create()
+    {
         return view('auth.register');
     }
 
     /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
+     * Handle registration request.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        // Validate Turnstile response with a custom error message
+        // 1. Validate form inputs
         $request->validate([
-            'cf-turnstile-response' => 'required',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'regex:/^[A-Za-z0-9._%+-]+@(usm\.edu\.ph|mail\.usm\.edu\.ph)$/i',
+                'unique:portal_users,email'
+            ],
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(11)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ],
+            'campus_id' => ['required', 'integer'],
+            'cf-turnstile-response' => ['required'], // ensure Turnstile token exists
         ], [
-            'cf-turnstile-response.required' => '* Turnstile verification is required.',
+            'email.regex' => 'Only USM institutional email addresses are allowed (example: yourname@usm.edu.ph).',
+            'email.unique' => 'This email is already registered.',
+            'password.required' => 'Password is required.',
+            'password.confirmed' => 'Password confirmation does not match.',
+            'password.min' => 'Password must be at least 11 characters long.',
+            'password.letters' => 'Password must contain at least one letter.',
+            'password.mixedCase' => 'Password must include both uppercase and lowercase letters.',
+            'password.numbers' => 'Password must contain at least one number.',
+            'password.symbols' => 'Password must include at least one special character (symbol).',
+            'cf-turnstile-response.required' => 'Turnstile verification failed. Please try again.',
         ]);
 
-        // Retrieve the Turnstile response from the request
+        // 2. Turnstile verification
         $turnstileResponse = $request->input('cf-turnstile-response');
-        $secretKey = env('TURNSTILE_SECRET_KEY'); // Your Turnstile secret key
+        $secretKey = config('services.turnstile.secret');
 
-        // Send the Turnstile response for verification
         try {
             $verifyResponse = Http::asForm()
-                ->timeout(seconds: 60) // Set timeout to 20 seconds
+                ->timeout(10)
                 ->post("https://challenges.cloudflare.com/turnstile/v0/siteverify", [
                     'secret' => $secretKey,
                     'response' => $turnstileResponse,
                     'remoteip' => $request->ip(),
                 ]);
 
-            $result = $verifyResponse->json();
+            $verifyJson = $verifyResponse->json();
 
-            // Check if Turnstile verification was successful
-            if (!$result['success']) {
-                return redirect()->back()->withErrors(['turnstile' => '* Turnstile verification failed. Please try again.']);
+            if (empty($verifyJson['success']) || $verifyJson['success'] !== true) {
+                return back()->withInput()->withErrors([
+                    'cf-turnstile-response' => 'Turnstile verification failed. Please try again.',
+                ]);
             }
         } catch (\Exception $e) {
-            Log::error('Error verifying Turnstile: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['turnstile' => '* Turnstile verification failed due to an internal error.']);
+            Log::error('Turnstile verification failed: ' . $e->getMessage());
+            return back()->withInput()->withErrors([
+                'cf-turnstile-response' => 'Turnstile verification failed. Please try again.',
+            ]);
         }
 
-        // Validate user inputs
-        $request->validate(
-            [
-                'firstname' => ['required', 'string', 'max:255'],
-                'lastname' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-                'phone' => ['required', 'string', 'unique:' . User::class, 'regex:/^09\d{2}-\d{3}-\d{4}$/'],
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
-                'birthdate' => ['required', 'date']
-            ],
-            [
-                'phone.unique' => 'The phone number is already in use. Please use a different number.',
-                'email.unique' => 'The email address is already taken. Please use a different email.',
-                'phone.regex' => 'The phone number must contain exactly 11 digits.',
-                'birthdate.required' => 'The birthdate is required.',
-            ]
-        );
+        // 3. Normalize inputs
+        $email = strtolower($request->input('email'));
+        $campusIdSelected = (int)$request->input('campus_id');
+        $tenantId = match ($campusIdSelected) {
+            1 => 1,
+            3 => 3,
+            4 => 4,
+            default => 1,
+        };
 
+        $encodedEmail = urlencode($email);
+        $apiUrl = $this->sarService->getStudentDetails($encodedEmail, $campusIdSelected, $tenantId);
 
-        // dd($active_cee_session->id);
+        // 4. Call Academic API
+        try {
+            $apiResponse = Http::timeout(10)->get($apiUrl);
 
-        // Create the user
+            if ($apiResponse->status() === 404) {
+                return back()->withInput()->withErrors([
+                    'email' => 'Student record not found in the system.'
+                ]);
+            }
+
+            if (!$apiResponse->successful()) {
+                return back()->withInput()->withErrors([
+                    'email' => 'Unable to verify email with the Academic system. Please try again later.'
+                ]);
+            }
+
+            $student = $apiResponse->json();
+
+        } catch (\Exception $e) {
+            Log::error('Student API request failed: ' . $e->getMessage());
+            return back()->withInput()->withErrors([
+                'email' => 'Unable to verify email with the Academic system. Please try again later.'
+            ]);
+        }
+
+        // 5. Validate student data from API
+        if (empty($student) || (empty($student['studentNo']) && empty($student['firstName']))) {
+            return back()->withInput()->withErrors([
+                'email' => 'Student record not found in the system.'
+            ]);
+        }
+
+        if (isset($student['campusId']) && (int)$student['campusId'] !== $campusIdSelected) {
+            return back()->withInput()->withErrors([
+                'campus_id' => 'The selected campus does not match the campus on file for this student email.'
+            ]);
+        }
+
+        $studentNo = $student['studentNo'] ?? null;
+
+        if ($studentNo && User::where('student_id', $studentNo)->exists()) {
+            return back()->withInput()->withErrors([
+                'student_id' => 'A portal account for this student number already exists.'
+            ]);
+        }
+
+        if (User::where('email', $email)->exists()) {
+            return back()->withInput()->withErrors([
+                'email' => 'This email is already registered.'
+            ]);
+        }
+
+        // 6. Map API fields
+        $firstName = $student['firstName'] ?? $student['first_name'] ?? null;
+        $lastName = $student['lastName'] ?? $student['last_name'] ?? null;
+        $middleName = $student['middlename'] ?? $student['middleName'] ?? null;
+        $extName = $student['extName'] ?? $student['extname'] ?? null;
+
+        $genderRaw = isset($student['gender']) ? trim($student['gender']) : null;
+        $gender = null;
+        if ($genderRaw !== null) {
+            $g = strtoupper(substr($genderRaw, 0, 1));
+            $gender = match($g) {
+                'M' => 'M',
+                'F' => 'F',
+                default => $genderRaw,
+            };
+        }
+
+        $dob = $student['dateOfBirth'] ?? null;
+        $dob = $dob ? substr($dob, 0, 10) : null;
+
+        // 7. Create portal user
         $user = User::create([
-            'firstname' => $request->firstname,
-            'middlename' => $request->middlename,
-            'lastname' => $request->lastname,
-            'suffix' => $request->suffix,
-            'sex' => $request->sex,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'birthdate' => $request->birthdate,
-            'password' => Hash::make($request->password),
+            'student_id' => $studentNo,
+            'firstname' => $firstName,
+            'middlename' => $middleName,
+            'lastname' => $lastName,
+            'suffix' => $extName,
+            'gender' => $gender,
+            'campus_id' => $student['campusId'] ?? $campusIdSelected,
+            'tenant_id' => $student['campusId'] ?? $tenantId,
+            'birthdate' => $dob,
+            'email' => $email,
+            'isemailverified' => true,
+            'email_verified_at' => now(),
+            'role' => 'student',
+            'status' => 'active',
+            'password' => Hash::make($request->input('password')),
         ]);
 
-        event(new Registered($user));
+        $user->sendEmailVerificationNotification();
+        Auth::login($user);
 
-        // Optionally log in the user after registration
-        // Auth::login($user);
-
-        return redirect(route('register'))->with('success', 'Registration successful! Please log in.');
+        return redirect()->route('student.dashboard')->with('success', 'Registration successful!');
     }
 }

@@ -3,63 +3,70 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\StudentYearbook;
+use Auth;
 use Illuminate\Http\Request;
 
 class MyProfileController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the student's profile.
      */
     public function index()
     {
-        return view('student.my-profile.index');
+        $user = Auth::user();
+        $profile = StudentYearbook::where('student_id', $user->student_id)->first();
+
+        return view('student.my-profile.index', compact('profile'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for editing the profile.
      */
-    public function create()
+    public function edit()
     {
-        //
+        $user = Auth::user();
+
+        $profile = StudentYearbook::firstOrCreate(
+            ['portal_user_id' => $user->student_id],
+            ['student_id' => $user->student_id]
+        );
+
+        return view('student.my-profile.edit', compact('profile'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Update the student's profile.
      */
-    public function store(Request $request)
+    public function update(Request $request)
     {
-        //
-    }
+        $user = Auth::user();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $data = $request->only([
+            'motto',
+            'ojt_experience',
+            'memorable_experience',
+            'career_goal',
+            'favorite_quote',
+            'facebook',
+            'linkedin',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        // Convert dynamic fields to JSON arrays
+        $data['awards'] = $request->input('awards', []);
+        $data['hobbies'] = $request->input('hobbies', []);
+        $data['organizations'] = $request->input('organizations', []);
+        $data['trainings'] = $request->input('trainings', []);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        // Ensure foreign key is included
+        $data['portal_user_id'] = $user->student_id;
+        $data['student_id'] = $user->student_id;
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        StudentYearbook::updateOrCreate(
+            ['portal_user_id' => $user->student_id],
+            $data
+        );
+
+        return redirect()->back()->with('success', 'Profile updated successfully!');
     }
 }

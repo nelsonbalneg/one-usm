@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     protected $table = 'portal_users';
@@ -20,17 +18,24 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'student_id',
         'firstname',
         'lastname',
-        'phone',
-        'email',
-        'password',
         'middlename',
         'suffix',
+        'gender',
+        'campus_id',
+        'tenant_id',
         'birthdate',
-        'sex',
+        'email',
+        'isemailverified',
+        'email_verified_at',
+        'photo',
+        'role',
+        'status',
+        'remarks',
+        'password',
         'last_seen',
-
     ];
 
     /**
@@ -44,25 +49,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'isemailverified' => 'boolean',
+        'birthdate' => 'date',
+        'last_seen' => 'datetime',
+    ];
 
-    public function hasRole($role)
+    /**
+     * Check if the user has a specific role.
+     */
+    public function hasRole($role): bool
     {
         return $this->role === $role;
-    }
-
-    public function applicant()
-    {
-        return $this->belongsTo(User::class, 'user_id');
     }
 }

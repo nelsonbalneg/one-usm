@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta content="Themesdesign" name="author">
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('backend/assets/images/logo/fav.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('backend/assets/images/logo/hiraya.png') }}">
     <!-- Layout config Js -->
     <script src="{{ asset('backend/assets/js/layout.js') }}"></script>
     <!-- Icons CSS -->

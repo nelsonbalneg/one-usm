@@ -6,7 +6,7 @@
             <div>
                 <script>
                     document.write(new Date().getFullYear())
-                </script> © hiraya.usm.edu.ph
+                </script> © One USM - Integrated Systems
             </div>
             <div class="hidden lg:block">
                 <div class="ltr:text-right rtl:text-left">
