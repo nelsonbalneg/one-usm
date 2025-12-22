@@ -109,6 +109,7 @@ return [
             'prefix_indexes' => true,
             'encrypt' => env('DB_ENCRYPT', 'no'),
             'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'true'),
+            
         ],
 
     ],
@@ -125,7 +126,7 @@ return [
     */
 
     'migrations' => [
-        'table' => 'migrations',
+        'table' => 'portal.migrations',
         'update_date_on_publish' => true,
     ],
 
