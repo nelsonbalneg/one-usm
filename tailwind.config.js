@@ -14,6 +14,9 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            spacing: {
+                header: '70px', // Custom header height spacing
+            },
         },
     },
 
