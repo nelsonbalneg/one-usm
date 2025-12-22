@@ -1,0 +1,46 @@
+# # ResultByApplicantView
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**application_id** | **int** |  | [optional]
+**reg_number** | **string** |  | [optional]
+**student_fname** | **string** |  | [optional]
+**student_mname** | **string** |  | [optional]
+**student_lname** | **string** |  | [optional]
+**priority_course** | **int** |  | [optional]
+**course_code** | **string** |  | [optional]
+**course_name** | **string** |  | [optional]
+**priority_policy_id** | **int** |  | [optional]
+**priority_program** | **string** |  | [optional]
+**priority_real_campus** | **string** |  | [optional]
+**photo** | **string** |  | [optional]
+**english** | **float** |  | [optional]
+**mathematics** | **float** |  | [optional]
+**science** | **float** |  | [optional]
+**inductive_reasoning** | **float** |  | [optional]
+**csa** | **float** |  | [optional]
+**applicant_id** | **string** |  | [optional]
+**date_result_uploaded** | **\DateTime** |  | [optional]
+**uploadedby** | **int** |  | [optional]
+**date_of_exam** | **\DateTime** |  | [optional]
+**batch** | **string** |  | [optional]
+**venue** | **string** |  | [optional]
+**remarks** | **string** |  | [optional]
+**part1** | **int** |  | [optional]
+**part2** | **int** |  | [optional]
+**specialization_code** | **string** |  | [optional]
+**rank** | **int** |  | [optional]
+**first_priority** | **bool** |  | [optional]
+**qualified_campuses** | [**\OpenAPI\Client\Model\QualifiedRealCampusView[]**](QualifiedRealCampusView.md) |  | [optional]
+**priority_real_campus_id** | **int** |  | [optional]
+**priority_major_id** | **int** |  | [optional]
+**priority_major_name** | **string** |  | [optional]
+**term_id** | **int** |  | [optional]
+**priority_campus_id** | **int** |  | [optional]
+**e_signature** | **string** |  | [optional]
+**card_photo** | **string** |  | [optional]
+**pre_registration_status** | **string** |  | [optional]
+
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)
