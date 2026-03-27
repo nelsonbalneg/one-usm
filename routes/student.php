@@ -48,7 +48,7 @@ Route::get('/academic-evaluation',[AcademicEvaluationController::class,'index'])
 Route::post('/academic-evaluation/store', [AcademicEvaluationController::class, 'store'])->name('student.academic-evaluation.store');
 // route to cancel academic evaluation request
 Route::put('/academic-evaluation/{id}/cancel', [AcademicEvaluationController::class, 'cancel'])->name('student.academic-evaluation.cancel');
-// route for faculty evaluation 
+// route for faculty evaluation
 Route::get('/faculty-evaluation', [FacultyEvaluationController::class, 'index'])->name('student.faculty-evaluation.index');
 //route for faculy evaluation connect
 Route::get('/faculty-evaluation/connect', [FacultyEvaluationController::class, 'connect'])->name('student.faculty-evaluation.connect');
@@ -61,20 +61,6 @@ Route::get('/virtual-map/libungan', [VirtualMapController::class, 'libungan'])->
 // route for clearance
 Route::get('/clearance', [ClearanceController::class, 'index'])->name('student.clearance.index');
 
-
-
-//     Route::put('/test-update/{id}', [StudentProfileController::class, 'update']);
-//     Route::put('cee/update-photo/{id}', [StudentProfileController::class, 'uploadPhoto'])->name('cee.update-photo');
-//     Route::resource('profile', StudentProfileController::class);
-
-
-
-//     Route::get('cee/schoolname', [StudentProfileController::class, 'school_name'])->name('school_list.index');
-
-//     Route::get('cee/checklrn', [StudentProfileController::class, 'getLrn'])->name('detectlrn.index');
-
-//     // Route::post('cee/upload-image', [StudentProfileController::class, 'upload']);
-//     Route::post('cee/upload-image', [StudentProfileController::class, 'upload'])->name('upload_image');
 
     Route::get('cee/upload-image-form', function () {
         return view('student.profile.upload'); // Accesses the upload.blade.php inside views/student/profile
