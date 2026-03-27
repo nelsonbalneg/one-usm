@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('evaluation_requests', function (Blueprint $table) {
             $table->id();
             $table->string('request_id')->unique(); // Example: 20251204-00001
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->references('id')->on('portal_users')->constrained()->onDelete('cascade');
             $table->string('status')->default('Pending'); // Pending, Approved, Rejected
             $table->text('remarks')->nullable();
             $table->timestamps();
