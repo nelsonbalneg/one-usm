@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ asset('backend/assets/css/tailwind2.css') }}">
     <livewire:styles />
 
+    <script src="{{ asset('backend/assets/js/tailwind/tailwind4.js') }}"></script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJPB3BXP56"></script>
     <script>

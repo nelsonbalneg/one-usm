@@ -9,7 +9,7 @@ class StudentYearBook extends Model
 {
      use HasFactory;
 
-     protected $table = 'student_yearbook';
+     protected $table = 'portal.student_yearbook';
 
     protected $fillable = [
         'student_id',

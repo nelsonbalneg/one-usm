@@ -11,7 +11,7 @@ return new class extends Migration
      */
      public function up()
     {
-        Schema::table('evaluation_requests', function (Blueprint $table) {
+        Schema::table('portal.evaluation_requests', function (Blueprint $table) {
             // Drop foreign key first (if exists)
             $table->dropForeign(['user_id']);
 
@@ -25,7 +25,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('evaluation_requests', function (Blueprint $table) {
+        Schema::table('portal.evaluation_requests', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->after('request_id')->onDelete('cascade');
             $table->dropColumn('student_id');
         });

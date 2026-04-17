@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('portal_users', function (Blueprint $table) {
+        Schema::create('portal.portal_users', function (Blueprint $table) {
             $table->id();
             $table->string('student_id')->nullable();
             $table->date('birthdate')->nullable();
@@ -37,6 +37,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('portal_users');
+        Schema::dropIfExists('portal.portal_users');
     }
 };

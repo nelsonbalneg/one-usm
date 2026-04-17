@@ -9,7 +9,7 @@ class VirtualMap extends Model
 {
     use HasFactory;
 
-    protected $table = 'virtualmap';
+    protected $table = 'portal.virtualmap';
 
     protected $fillable = [
         'latitude',

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('virtualmap', function (Blueprint $table) {
+        Schema::create('portal.virtualmap', function (Blueprint $table) {
             $table->id();
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('virtualmap');
+        Schema::dropIfExists('portal.virtualmap');
     }
 };

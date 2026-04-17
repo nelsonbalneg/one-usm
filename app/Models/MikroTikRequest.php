@@ -9,7 +9,7 @@ class MikroTikRequest extends Model
 {
     use HasFactory;
 
-    protected $table = 'mikrotik_requests';
+    protected $table = 'portal.mikrotik_requests';
 
 
     protected $fillable = [

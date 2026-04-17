@@ -9,7 +9,7 @@ class Clearance extends Model
 {
     use HasFactory;
 
-    protected $table = 'clearances';
+    protected $table = 'portal.clearances';
 
     protected $fillable = [
         'student_id',

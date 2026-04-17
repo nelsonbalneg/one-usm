@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('evaluation_requests', function (Blueprint $table) {
+        Schema::create('portal.evaluation_requests', function (Blueprint $table) {
             $table->id();
             $table->string('request_id')->unique(); // Example: 20251204-00001
             $table->foreignId('user_id')->references('id')->on('portal_users')->constrained()->onDelete('cascade');
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('evaluation_requests');
+        Schema::dropIfExists('portal.evaluation_requests');
     }
 };

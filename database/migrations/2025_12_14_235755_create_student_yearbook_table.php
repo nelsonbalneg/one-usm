@@ -13,7 +13,7 @@ return new class extends Migration {
 
     public function up(): void
     {
-        Schema::table('portal_users', function (Blueprint $table) {
+        Schema::table('portal.portal_users', function (Blueprint $table) {
             $table->unique('student_id');
         });
 
@@ -35,7 +35,7 @@ return new class extends Migration {
 
         $table->foreign('student_id')
             ->references('student_id')
-            ->on('dbo.portal_users') // 👈 include schema here too
+            ->on('portal.portal_users') // 👈 include schema here too
             ->onDelete('cascade');
     });
 
@@ -46,6 +46,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_yearbook');
+        Schema::dropIfExists('portal.student_yearbook');
     }
 };

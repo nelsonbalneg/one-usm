@@ -10,7 +10,7 @@ class UserAccount extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'users';
+    protected $table = 'portal.user_accounts';
 
     protected $fillable = [
         'firstname',
@@ -49,7 +49,7 @@ class UserAccount extends Model
         'employee_id',
     ];
 
-     protected $hidden = [
+    protected $hidden = [
         'password',
         'remember_token',
     ];

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mikrotik_requests', function (Blueprint $table) {
+        Schema::create('portal.mikrotik_requests', function (Blueprint $table) {
             $table->id();
             $table->string('student_no');
             $table->string('password');
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mikrotik_requests');
+        Schema::dropIfExists('portal.mikrotik_requests');
     }
 };

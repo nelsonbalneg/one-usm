@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('portal_users', function (Blueprint $table) {
+        Schema::table('portal.portal_users', function (Blueprint $table) {
             $table->string('firstname')->nullable()->after('student_id');
             $table->string('lastname')->nullable()->after('firstname');
         });
@@ -21,7 +21,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('portal_users', function (Blueprint $table) {
+        Schema::table('portal.portal_users', function (Blueprint $table) {
             $table->dropColumn(['firstname', 'lastname']);
         });
     }
