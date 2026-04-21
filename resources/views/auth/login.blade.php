@@ -137,15 +137,31 @@
                     </select>
 
                 </div>
-                <form id="google-login-form" method="GET" action="{{ route('google.login') }}">
+                <form id="google-login-form" method="POST" action="{{ route('google.login') }}">
+                    @csrf
+
                     <input type="hidden" name="campus" id="google-campus" value="">
+
                     <button type="submit"
                         class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 hover:bg-gray-50">
                         <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google"
                             class="w-5 h-5">
                         <span>Continue with Google</span>
                     </button>
+
+                    <!-- Turnstile with same width -->
+                    <div class="mt-4 flex justify-center">
+                        <div class="w-full max-w-[100%]">
+                            <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    @error('cf-turnstile-response')
+                        <span class="text-red-500 text-sm block text-center mt-2">{{ $message }}</span>
+                    @enderror
                 </form>
+
 
             </div>
         </div>
@@ -155,7 +171,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
-        // Copy selected campus to the hidden input before submitting
         const campusSelect = document.getElementById('campus');
         const googleCampusInput = document.getElementById('google-campus');
         const googleForm = document.getElementById('google-login-form');
@@ -163,10 +178,20 @@
         googleForm.addEventListener('submit', function(e) {
             if (!campusSelect.value) {
                 e.preventDefault();
-                alert('Please select a campus before logging in.');
-            } else {
-                googleCampusInput.value = campusSelect.value;
+
+                Toastify({
+                    text: "Please select a campus before logging in.",
+                    duration: 3000,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    backgroundColor: "#f56565", // red-500 Tailwind color
+                    stopOnFocus: true,
+                }).showToast();
+
+                return;
             }
+
+            googleCampusInput.value = campusSelect.value;
         });
     </script>
 </body>

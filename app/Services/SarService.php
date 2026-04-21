@@ -107,9 +107,9 @@ class SarService
         return "{$this->ccdRedirectUrl}{$token}";
     }
 
-    public function getStudentGrades(string $studentNo): ?array
+    public function getStudentGrades(string $studentNo, int $tenantId): ?array
     {
-        $url = "{$this->baseUrl}/Grades/studentreport/{$studentNo}?tenantId={$this->tenantId}";
+        $url = "{$this->baseUrl}/Grades/studentreport/{$studentNo}?tenantId={$tenantId}";
 
         $response = Http::get($url);
 

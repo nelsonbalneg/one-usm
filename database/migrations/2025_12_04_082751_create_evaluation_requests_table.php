@@ -9,16 +9,15 @@ return new class extends Migration {
      * Run the migrations.
      */
     public function up()
-    {
-        Schema::create('evaluation_requests', function (Blueprint $table) {
-            $table->id();
-            $table->string('request_id')->unique(); // Example: 20251204-00001
-            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('status')->default('Pending'); // Pending, Approved, Rejected
-            $table->text('remarks')->nullable();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('evaluation_requests', function (Blueprint $table) {
+        $table->id();
+        $table->string('request_id')->unique();
+        $table->string('status')->default('Pending');
+        $table->text('remarks')->nullable();
+        $table->timestamps();
+    });
+}
 
 
     /**

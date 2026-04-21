@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Services\SarService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
@@ -13,20 +14,51 @@ use Illuminate\Http\Request;
 
 class GoogleController extends Controller
 {
+    /**
+     * STEP 1: Validate Turnstile + Campus
+     * STEP 2: Redirect to Google
+     */
+
+    protected SarService $sarService;
+
+    public function __construct(SarService $sarService)
+    {
+        $this->sarService = $sarService;
+    }
+
     public function redirect(Request $request)
     {
-        $campus = $request->input('campus');
+        // ✅ Validate required fields
+        $request->validate([
+            'campus' => 'required',
+            'cf-turnstile-response' => 'required',
+        ]);
 
-        // Ensure campus is selected
-        if (!$campus) {
+        // ✅ Verify Turnstile with Cloudflare
+        $turnstile = Http::asForm()->post(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            [
+                'secret'   => config('services.turnstile.secret_key'),
+                'response' => $request->input('cf-turnstile-response'),
+                'remoteip' => $request->ip(),
+            ]
+        );
+
+        if (!($turnstile->json('success') === true)) {
             return redirect()->route('login')
-                ->withErrors(['google' => 'Please select a campus before logging in.']);
+                ->withErrors(['cf-turnstile-response' => 'Turnstile verification failed. Please try again.']);
         }
 
-        session(['campus' => $campus]);
+        // ✅ Store campus in session
+        session(['campus' => $request->campus]);
+
+        // ✅ Redirect to Google OAuth
         return Socialite::driver('google')->redirect();
     }
 
+    /**
+     * Google OAuth callback
+     */
     public function callback()
     {
         $campus = session('campus');
@@ -45,20 +77,21 @@ class GoogleController extends Controller
 
         $email = $googleUser->getEmail();
 
-        // Map tenant ID based on campus
+        // Map tenant ID
         $tenantId = match ($campus) {
             1 => 1,
             3 => 3,
             default => $campus,
         };
 
-        // Call API to verify student for the selected campus
+        // Verify student via API
         $apiUrl = "http://172.16.0.60/academic/api/v2/Students/campus/{$campus}/getbyemail/"
             . urlencode($email) . "?tenantId={$tenantId}";
+        
+
 
         $response = Http::get($apiUrl);
 
-        // Student not found for selected campus/tenant
         if ($response->status() === 404 || str_contains($response->body(), 'Student not Found')) {
             return redirect()->route('login')
                 ->withErrors(['google' => 'You are not allowed to log in for this campus.']);
@@ -71,29 +104,30 @@ class GoogleController extends Controller
 
         $apiData = $response->json();
 
-        // Create user if not exists
+        // Create or update user
         $user = User::firstOrCreate(
             ['email' => $email],
             [
-                'student_id'       => $apiData['studentNo'] ?? null,
-                'birthdate'        => isset($apiData['dateOfBirth']) ? date('Y-m-d', strtotime($apiData['dateOfBirth'])) : null,
-                'firstname'        => $apiData['firstName'] ?? $googleUser->getName(),
-                'middlename'       => $apiData['middlename'] ?? '',
-                'lastname'         => $apiData['lastName'] ?? '',
-                'gender'           => $apiData['gender'] ?? '',
-                'password'         => Hash::make(Str::random(32)),
-                'role'             => 'student',
-                'status'           => 'active',
-                'isemailverified'  => true,
-                'email_verified_at'=> now(),
-                'tenant_id'        => $tenantId,
-                'campus_id'        => $apiData['campusId'] ?? $campus,
+                'student_id'        => $apiData['studentNo'] ?? null,
+                'birthdate'         => isset($apiData['dateOfBirth'])
+                                        ? date('Y-m-d', strtotime($apiData['dateOfBirth']))
+                                        : null,
+                'firstname'         => $apiData['firstName'] ?? $googleUser->getName(),
+                'middlename'        => $apiData['middlename'] ?? '',
+                'lastname'          => $apiData['lastName'] ?? '',
+                'gender'            => $apiData['gender'] ?? '',
+                'password'          => Hash::make(Str::random(32)),
+                'role'              => 'student',
+                'status'            => 'active',
+                'isemailverified'   => true,
+                'email_verified_at' => now(),
+                'tenant_id'         => $tenantId,
+                'campus_id'         => $apiData['campusId'] ?? $campus,
             ]
         );
 
         Auth::login($user, true);
 
-        // Redirect based on role
         return match ($user->role) {
             'student' => redirect()->route('student.dashboard'),
             'admin'   => redirect()->route('admin.dashboard'),

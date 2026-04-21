@@ -28,7 +28,7 @@ class ReportOfGradesController extends Controller
         $tenantId = auth()->user()->getAttribute('tenant_id');
 
         // Get all term grades
-        $gradesData = $this->sarService->getStudentGrades($studentNo);
+        $gradesData = $this->sarService->getStudentGrades($studentNo, $tenantId);
 
         $finalTerms = [];
         $lastTermIndex = count($gradesData) - 1; // get index of last term

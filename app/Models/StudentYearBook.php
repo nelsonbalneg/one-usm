@@ -24,6 +24,8 @@ class StudentYearBook extends Model
         'favorite_quote',
         'facebook',
         'linkedin',
+        'campus_id',
+        'tenant_id',
     ];
 
     protected $casts = [

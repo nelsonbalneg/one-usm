@@ -16,13 +16,25 @@ class StudentYearBookController extends Controller
     {
         $user = Auth::user();
 
-        // Get or create a profile
-        $profile = StudentYearbook::firstOrCreate(
-            ['student_id' => $user->student_id],
-            ['student_id' => $user->student_id]
+        if (!$user) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Get or create a profile for the logged-in student
+         $profile = StudentYearbook::firstOrCreate(
+            [
+                'student_id' => $user->student_id,
+                'campus_id'  => $user->campus_id,
+                'tenant_id'  => $user->tenant_id,
+            ],
+            [
+                'student_id' => $user->student_id,
+                'campus_id'  => $user->campus_id,
+                'tenant_id'  => $user->tenant_id,
+            ]
         );
 
-        return view('student.profile.edit', compact('profile'));
+        return view('student.my-profile.index', compact('profile'));
     }
 
     /**
@@ -42,15 +54,23 @@ class StudentYearBookController extends Controller
             'linkedin'
         ]);
 
-        // Convert dynamic fields to JSON arrays
-        $data['awards'] = $request->input('awards', []);
-        $data['hobbies'] = $request->input('hobbies', []);
-        $data['organizations'] = $request->input('organizations', []);
-        $data['trainings'] = $request->input('trainings', []);
+        // Convert dynamic fields to JSON arrays, remove empty entries
+        $data['awards'] = array_filter($request->input('awards', []));
+        $data['hobbies'] = array_filter($request->input('hobbies', []));
+        $data['organizations'] = array_filter($request->input('organizations', []));
+        $data['trainings'] = array_filter($request->input('trainings', []));
+
+        // Always enforce tenant & campus ownership
+        $data['campus_id'] = $user->campus_id;
+        $data['tenant_id'] = $user->tenant_id;
 
         // Update or create profile
         StudentYearbook::updateOrCreate(
-            ['student_id' => $user->student_id],
+            [
+                'student_id' => $user->student_id,
+                'campus_id'  => $user->campus_id,
+                'tenant_id'  => $user->tenant_id,
+            ],
             $data
         );
 

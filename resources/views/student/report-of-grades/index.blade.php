@@ -1,6 +1,6 @@
 @extends('student.layouts.master')
 @section('title')
-    One USM - SAR System
+    One USM - Report of Grades
 @endsection
 
 @push('styles')

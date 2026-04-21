@@ -9,19 +9,24 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up()
-    {
+    public function up()
+{
+    if (Schema::hasTable('evaluation_requests') &&
+        Schema::hasColumn('evaluation_requests', 'user_id')) {
+
         Schema::table('evaluation_requests', function (Blueprint $table) {
-            // Drop foreign key first (if exists)
-            $table->dropForeign(['user_id']);
 
-            // Drop the user_id column
+            try {
+                $table->dropForeign(['user_id']);
+            } catch (\Exception $e) {
+                // ignore if FK doesn't exist
+            }
+
             $table->dropColumn('user_id');
-
-            // Add student_id column
             $table->string('student_id')->after('request_id');
         });
     }
+}
 
     public function down(): void
     {

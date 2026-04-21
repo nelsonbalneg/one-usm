@@ -10,6 +10,7 @@ use App\Http\Controllers\Student\MyApplicationController;
 use App\Http\Controllers\Student\MyProfileController;
 use App\Http\Controllers\Student\ReportOfGradesController;
 use App\Http\Controllers\Student\SarController;
+use App\Http\Controllers\Student\StudentYearBookController;
 use App\Http\Controllers\Student\VirtualMapController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Student\StudentController;
@@ -60,6 +61,10 @@ Route::get('/virtual-map/kcc', [VirtualMapController::class, 'kcc'])->name('stud
 Route::get('/virtual-map/libungan', [VirtualMapController::class, 'libungan'])->name('student.virtual-map.libungan');
 // route for clearance
 Route::get('/clearance', [ClearanceController::class, 'index'])->name('student.clearance.index');
+// route for my-yearbook
+Route::get('/my-yeabook', [StudentYearBookController::class, 'edit'])->name('student.my-yearbook.edit');
+Route::put('/student/yearbook', [StudentYearBookController::class, 'update'])->name('student.yearbook.update');
+
 
 
 

@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('portal_users', function (Blueprint $table) {
             $table->id();
-            $table->string('student_id')->nullable();
+            $table->string('student_id')->unique();
             $table->date('birthdate')->nullable();
             $table->string('email')->unique();
             $table->boolean('isemailverified')->default(true);
